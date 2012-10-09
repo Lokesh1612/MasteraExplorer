@@ -1,0 +1,40 @@
+{
+"endpoints":[
+  {
+     "name":"GetInstitutions",
+     "methods":[
+        {
+           "MethodName":"Default",
+           "Synopsis":"This API returns a list of institutions supported for data acquisition.",
+           "HTTPMethod":"GET",
+           "URI":"/institutions",
+           "RequiresOAuth":"Y",
+           "parameters":[
+            ]
+        }
+
+      ]
+  },
+  {
+     "name":"GetInstitutionDetails",
+     "methods":[
+         {
+            "MethodName":"Default",
+            "Synopsis":"This API returns detailed information for the supplied institution ID.",
+            "HTTPMethod":"GET",
+            "URI":"/institutions/:institution_id",
+            "RequiresOAuth":"Y",
+            "parameters":[
+                {
+                    "Name": "institution_id",
+                    "Required": "Y",
+                    "Default": "",
+                    "Type": "string"
+                }
+            ]
+         }
+     ]
+  }
+
+ ]
+}

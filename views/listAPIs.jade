@@ -1,0 +1,15 @@
+h1=title
+
+form(action='/login', method='post')
+    section(class='credentials')
+        - if (loginInfo)
+            h1='Welcome ' + loginInfo.displayName
+        - else
+            ipp:login(href="/openid/intuit")
+br
+
+h2 Choose an API
+
+ul
+   - for (var api in apiInfo)
+       li: a(href = '/' + api) #{apiInfo[api].name}
