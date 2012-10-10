@@ -120,7 +120,8 @@ function getSavedInfo(req, res, next){
         key + ':accessTokenSecret',
         key + ':apiKey',
         key + ':apiSecret',
-        key + ':params'
+        key + ':params',
+        key + ':savedParams'
     ], function(err, result) {
         if (err) {
             console.log(util.inspect(err));
@@ -134,6 +135,9 @@ function getSavedInfo(req, res, next){
             req.session[apiName].authed = true
             if(result[4]!=null){
                 req.session[apiName].params = JSON.parse(result[4]);
+            }
+            if(result[5]!=null){
+                req.session[apiName].savedParams = JSON.parse(result[5]);
             }
             next();
         }
@@ -152,7 +156,10 @@ function saveRequest(req, res, next) {
     else
         key = req.sessionID + ':' + apiName;
     // Unique key using the sessionID and API name to store tokens and secrets
-    db.set(key + ':params', JSON.stringify(req.body.params), redis.print);
+    var dataToSave = {};
+    dataToSave[req.body.endpointName]=req.body.params;
+    db.set(key + ':savedParams' , JSON.stringify(dataToSave), redis.print);
+    next();
 }
 
 function retrieveRequest(req, res, next) {
@@ -665,6 +672,10 @@ app.dynamicHelpers({
     defaultParam: function(req, res) {
         if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['params'])
             return req.session[req.params.api]['params'];
+    },
+    savedParams: function(req, res) {
+        if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedParams'])
+            return req.session[req.params.api]['savedParams'];
     },
     session: function(req, res) {
         // If api wasn't passed in as a parameter, check the path to see if it's there

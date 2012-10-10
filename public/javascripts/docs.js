@@ -173,8 +173,8 @@
         var params = $(this).serializeArray(),
             apiKey = { name: 'apiKey', value: $('input[name=key]').val() },
             apiSecret = { name: 'apiSecret', value: $('input[name=secret]').val() },
-            apiName = { name: 'apiName', value: $('input[name=apiName]').val() };
-
+            apiName = { name: 'apiName', value: $('input[name=apiName]').val() },
+            endpointName = { name: 'endpointName', value: $('input[name=endpointName]').val() };
         params.push(apiKey, apiSecret, apiName);
 
         // Setup results container
@@ -201,6 +201,13 @@
                             $(thislink).remove();
                         });
                 })
+                .insertAfter($('input[type=submit]', self));
+
+            // loader
+            var loader = $(document.createElement('img'))
+                .attr('src','/images/loader.gif')
+                .attr('id','loader')
+                .addClass('loader')
                 .insertAfter($('input[type=submit]', self));
 
             // Call that was made, add pre elements
@@ -233,8 +240,6 @@
                 .addClass('response prettyprint'));
         }
 
-        console.log(params);
-
         $.post('/processReq', params, function(result, text) {
             // If we get passed a signin property, open a window to allow the user to signin/link their account
             if (result.signin) {
@@ -253,9 +258,9 @@
         })
         // Complete, runs on error and success
         .success(function(result, text) {
-            console.log("at complete");
-            var response = JSON.parse(result.responseText);
-
+            console.log("at success");
+            //var response = JSON.parse(result.responseText);
+            response = result;
             if (response.call) {
                 $('pre.call', resultContainer)
                     .text(response.call);
@@ -297,6 +302,11 @@
             $('pre.response', resultContainer)
                 .toggleClass('error', true)
                 .text(response);
+        })
+        .complete(function(result, text) {
+            console.log("on complete");
+            console.log(self);
+            $('#loader',self).remove();
         })
     })
 
