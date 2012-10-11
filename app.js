@@ -816,6 +816,12 @@ app.get('/openid/intuit/return',
         res.redirect('back');
     });
 
+app.get('/logout', function(req, res){
+    req.session.loggedin = false
+    req.logout();
+    res.redirect('/');
+});
+
 // OAuth callback page, closes the window immediately after storing access token/secret
 app.get('/authSuccess/:api', oauthSuccess, function(req, res) {
     res.render('authSuccess', {

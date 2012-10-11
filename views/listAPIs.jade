@@ -1,9 +1,10 @@
 h1=title
 
-form(action='/login', method='post')
+form(action='/logout', method='get')
     section(class='credentials')
         - if (loginInfo)
             h1='Welcome ' + loginInfo.displayName
+            input(name='logout', value='Logout', type='submit')
         - else
             ipp:login(href="/openid/intuit")
 br
