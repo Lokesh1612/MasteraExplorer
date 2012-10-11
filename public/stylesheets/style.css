@@ -584,6 +584,10 @@ li {
   font-size: 12px;
 }
 
+.method form img.loader {
+  margin-left: 20px;
+}
+
 .method form a.clear-results:hover {
   background-color: red;
   color: #fff;

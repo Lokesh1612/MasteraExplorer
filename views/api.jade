@@ -6,37 +6,60 @@ h1=apiInfo.name
 
 form#credentials
     input(type='hidden', name='apiName', value=apiName)
-    - if (apiInfo.auth) 
-        section(class='credentials ' + authed)
-         - if (authed && apiInfo.oauth)
-             span Authenticated with OAuth
-             img(src='/images/accept.png')
-         - else
+    - if (apiInfo.auth)
+        - if (!authed)
+          section(class='credentials ' + authed)
+
              h2 API Credentials
                img(src='/images/key.png')
 
              - if (apiInfo.oauth)
                  input(type='hidden', name='oauth', value='authrequired')
 
-             - if (apiInfo.auth.defaultKey)
-                 - var defaultKey =apiInfo.auth.defaultKey
+             - if (session.defaultKey)
+                 - var defaultKey =session.defaultKey
              - else
                  - var defaultKey =''
 
-             - if (apiInfo.auth.defaultSecret)
-                 - var defaultSecret =apiInfo.auth.defaultSecret
+             - if (session.defaultSecret)
+                 - var defaultSecret =session.defaultSecret
              - else
                  - var defaultSecret =''
+             - if (session.defaultAccessKey)
+                 - var defaultAccessKey =session.defaultAccessKey
+             - else
+                 - var defaultAccessKey =''
+             - if (session.defaultAccessSecret)
+                 - var defaultAccessSecret =session.defaultAccessSecret
+             - else
+                 - var defaultAccessSecret =''
+
              div
                  label(for='key') API Key
-                 input(id='key', name='key', value=defaultKey, style='color=#EEEEEE')
+                 input(id='key', name='key', value=defaultKey, placeholder="Required", style='color=#EEEEEE')
              div
                  - if (apiInfo.oauth || apiInfo.signature)
                      label(for='secret') Shared Secret
-                     input(id='secret', name='secret', value=defaultSecret, style='color=#EEEEEE')
-             - if (apiInfo.oauth && apiInfo.oauth.type !='two-legged')
+                     input(id='secret', name='secret', value=defaultSecret, placeholder="Required", style='color=#EEEEEE')
+             - if(apiInfo.oauth && apiInfo.oauth.type !='two-legged')
                  div
-                    input(name='oauth', value='Authenticate with OAuth', type='submit', id='oauth-auth')
+                     label(for='accessKey') Access Key
+                     input(id='accessKey', name='accessKey', value=defaultAccessKey, style='color=#EEEEEE')
+                 div
+                     label(for='accessSecret') Access Key Secret
+                     input(id='accessSecret', name='accessSecret', value=defaultAccessSecret, style='color=#EEEEEE')
+                 div
+                    input(name='save', value='Oauth / Save', type='submit', id='oauth-auth')
+             input(type='hidden', name='action', value='submit', id='submitClicked')
+             input(name='default', value='Get Default', type='submit', id='oauth-auth', onclick="javascript:document.getElementById('submitClicked').value='getDefault'")
+        - else if (authed && apiInfo.oauth)
+            section(class='credentials ' + authed)
+                div
+                    span Authenticated with OAuth
+                    img(src='/images/accept.png')
+                input(type='hidden', name='action', value='remove', id='submitClicked')
+                input(name='remove', value='Invalidate', type='submit', onclick="javascript:document.getElementById('submitClicked').value='remove'")
+
 
 div(id='controls')
     ul
@@ -72,7 +95,7 @@ ul
                             input(type='hidden', name='httpMethod', value=method.HTTPMethod)
                             input(type='hidden', name='oauth', value=secure)
                             input(type='hidden', name='methodUri', value=method.URI)
-
+                            input(type='hidden', name='endpointName', value=endpoint.name)
                             span.description #{method.Synopsis}
                             br
                             br
@@ -122,6 +145,12 @@ ul
                                                                 - each value,key in defaultParam
                                                                     - if (key == parameter.Name)
                                                                         - defaultValue = value
+                                                            - if(savedParams != null)
+                                                                -each value,key in savedParams
+                                                                    - if(key == endpoint.name)
+                                                                        -each value1,key1 in value
+                                                                            -if (key1 == parameter.Name)
+                                                                                -defaultValue = value1
                                                             input(name='params[' + parameter.Name + ']', value=defaultValue, placeholder=className)
                                                     td.type=parameter.Type
                                                     td.description

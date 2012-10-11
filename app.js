@@ -114,7 +114,10 @@ passport.deserializeUser(function(obj, done) {
 
 function getSavedInfo(req, res, next){
     var apiName = req.params.api;
-    var key = req.session.passport.user.emails[0].value + ":" + apiName;
+    if(req.session.loggedin)
+        key = req.session.passport.user.emails[0].value + ":" + apiName;
+    else
+        key = req.sessionID + ':' + apiName;
     db.mget([
         key + ':accessToken',
         key + ':accessTokenSecret',
@@ -128,11 +131,16 @@ function getSavedInfo(req, res, next){
             next();
         }
         else if(result[0] != null && result[1] != null && result[2] != null && result[3] != null){
-            api = result[0].split(":");
             if(!req.session[apiName]){
                 req.session[apiName] = {};
             }
             req.session[apiName].authed = true
+            if(!apisConfig[apiName])
+                apisConfig[apiName]={};
+            req.session[apiName].defaultAccessKey=result[0];
+            req.session[apiName].defaultAccessSecret=result[1];
+            req.session[apiName].defaultKey=result[2];
+            req.session[apiName].defaultSecret=result[3];
             if(result[4]!=null){
                 req.session[apiName].params = JSON.parse(result[4]);
             }
@@ -166,11 +174,60 @@ function retrieveRequest(req, res, next) {
 
 }
 
-function checkAuth(req, res, next) {
-    if(req.session.loggedin){
-        getSavedInfo(req, res, next);
-    } else
-        next();
+function handleCredentials(req, res, next){
+    console.log("here");
+    if(req.body.action && req.body.action == "remove"){
+        removeCredentials(req, res, next);
+    }
+    else if(req.body.action && req.body.action == "getDefault"){
+        var apiName = req.body.apiName;
+        if(apisConfig[apiName].default)
+        res.send({ 'default': apisConfig[apiName].default });
+    }
+    else if(!req.body.accessKey || !req.body.accessSecret){
+        oauth(req, res, next);
+    }
+    else{
+        saveCredentials(req, res, next);
+    }
+}
+
+function removeCredentials(req, res, next) {
+    var apiName = req.body.apiName;
+    if(req.session.loggedin)
+        key = req.session.passport.user.emails[0].value + ':' + apiName;
+    // Unique key using the username and API name to store tokens and secrets
+    else
+        key = req.sessionID + ':' + apiName;
+    db.del(key + ':apiKey');
+    db.del(key + ':apiSecret');
+    db.del(key + ':requestToken');
+    db.del(key + ':requestTokenSecret');
+    db.del(key + ':accessToken');
+    db.del(key + ':accessTokenSecret');
+
+    req.session[apiName].authed = false;
+    req.session[apiName].default = false;
+    next();
+}
+
+function saveCredentials(req, res, next){
+    var apiName = req.body.apiName;
+    if(req.session.loggedin)
+        key = req.session.passport.user.emails[0].value + ':' + apiName;
+    // Unique key using the username and API name to store tokens and secrets
+    else
+        key = req.sessionID + ':' + apiName;
+    if(req.body.key && req.body.secret && req.body.accessKey && req.body.accessSecret){
+        db.set(key + ':apiKey', req.body.key, redis.print);
+        db.set(key + ':apiSecret', req.body.secret, redis.print);
+        db.set(key + ':accessToken', req.body.accessKey, redis.print);
+        db.set(key + ':accessTokenSecret', req.body.accessSecret, redis.print);
+        if(!req.session[apiName])
+            req.session[apiName]={};
+        req.session[apiName].authed = true;
+    }
+    next();
 }
 
 function oauth(req, res, next){
@@ -389,8 +446,8 @@ function processRequest(req, res, next) {
             ],
                 function(err, results) {
 
-                    var apiKey = (typeof reqQuery.apiKey == "undefined" || reqQuery.apiKey == "undefined")?results[0]:reqQuery.apiKey,
-                        apiSecret = (typeof reqQuery.apiSecret == "undefined" || reqQuery.apiSecret == "undefined")?results[1]:reqQuery.apiSecret,
+                    var apiKey = results[0],
+                        apiSecret = results[1],
                         accessToken = results[2],
                         accessTokenSecret = results[3];
                     console.log(apiKey);
@@ -688,7 +745,10 @@ app.dynamicHelpers({
                     req.params.api = pathName;
                 }
             });
+        } else if(req.session[req.params.api]) {
+            return req.session[req.params.api];
         }
+
         return req.session;
     },
     apiInfo: function(req, res) {
@@ -738,7 +798,9 @@ app.post('/processReq', oauth, saveRequest, processRequest, function(req, res) {
     res.send(result);
 });
 
-app.all('/auth', oauth);
+app.all('/credential', handleCredentials, function(req, res){
+    res.send({});
+});
 
 app.get('/openid/intuit',
     passport.authenticate('intuit', { failureRedirect: '/login' }),
@@ -762,7 +824,7 @@ app.get('/authSuccess/:api', oauthSuccess, function(req, res) {
 });
 
 // API shortname, all lowercase
-app.get('/:api([^\.]+)', checkAuth, function(req, res) {
+app.get('/:api([^\.]+)', getSavedInfo, function(req, res) {
     req.params.api=req.params.api.replace(/\/$/,'');
     console.log(req.params.api);
     res.render('api');

@@ -44,7 +44,7 @@ var livedocs = (function() {
     ld.authSuccess = function(msg) {
         // window.location.reload();
         // console.log('Success!');
-        var credentials = $('section.credentials');
+       /* var credentials = $('section.credentials');
 
         $('h2', credentials).remove();
         $('img', credentials).remove();
@@ -53,6 +53,8 @@ var livedocs = (function() {
             .addClass('authed')
             .append($(document.createElement('span')).text(msg))
             .append($(document.createElement('img')).attr('src', '/images/accept.png'));
+       */
+       location.reload(true);
     }
 
     return ld;

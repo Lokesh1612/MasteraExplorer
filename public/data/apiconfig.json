@@ -59,6 +59,12 @@
             "publicPath": "",
             "auth": "oauth",
             "privatePath": "/rest-war/v1",
+            "default": {
+                "defaultKey": "4dfbt5wp2vi2bprabnab8pe6gc",
+                "defaultSecret": "WhVdA7We0z6dygFJ8aChLeDytz8lk8yqAkQ6tivd",
+                "defaultAccessKey": "lvprdLLCKRObwuVq609gNLBNHQBKg668Wlc7iKcCrflmPYnD",
+                "defaultAccessSecret": "qKm5XySoObRUhti8FeYvmo7xu0ntUnNkqvK80PP7"
+            },
             "oauth": {
                 "type": "three-legged",
                 "requestURL": "https://oauth.intuit.com/oauth/v1/get_request_token",

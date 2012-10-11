@@ -150,15 +150,35 @@
     });
 
     // Auth with OAuth
+ /*   $('#oauth-remove').click(function(event) {
+        event.preventDefault();
+
+        var params = $(this).serializeArray();
+        console.log(params);
+        $.post('/removeauth', params);
+    });
+*/
     $('#credentials').submit(function(event) {
+        var self = this;
         event.preventDefault();
 
         var params = $(this).serializeArray();
 
-        $.post('/auth', params, function(result) {
+        $.post('/credential', params, function(result) {
             if (result.signin) {
                 window.open(result.signin,"_blank","height=900,width=800,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0");
+            }else if(result.default) {
+                console.log(result.default);
+                console.log($('#submitClicked',self));
+                $('input[name="key"]', self).val(result.default.defaultKey);
+                $('input[name="secret"]', self).val(result.default.defaultSecret);
+                $('input[name="accessKey"]', self).val(result.default.defaultAccessKey);
+                $('input[name="accessSecret"]', self).val(result.default.defaultAccessSecret);
+                $('#submitClicked',self).val("submit");
+            } else {
+                location.reload(true);
             }
+
         })
     });
 
