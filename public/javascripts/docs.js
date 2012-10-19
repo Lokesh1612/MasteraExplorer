@@ -168,8 +168,6 @@
             if (result.signin) {
                 window.open(result.signin,"_blank","height=900,width=800,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0");
             }else if(result.default) {
-                console.log(result.default);
-                console.log($('#submitClicked',self));
                 $('input[name="key"]', self).val(result.default.defaultKey);
                 $('input[name="secret"]', self).val(result.default.defaultSecret);
                 $('input[name="accessKey"]', self).val(result.default.defaultAccessKey);
@@ -261,7 +259,7 @@
         }
 
         $.post('/processReq', params, function(result, text) {
-            // If we get passed a signin property, open a window to allow the user to signin/link their account
+            // If we get passed a signin property, open a window to allow the user to signin/link their accoun
             if (result.signin) {
                 window.open(result.signin,"_blank","height=900,width=800,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0");
             } else {
@@ -270,17 +268,22 @@
                 // Format output according to content-type
                 response = livedocs.formatData(result.response, result.headers['content-type'])
 
-                $('pre.response', resultContainer)
+ /*               $('pre.response', resultContainer)
                     .toggleClass('error', false)
                     .text(response);
-            }
+   */         }
 
         })
         // Complete, runs on error and success
         .success(function(result, text) {
-            console.log("at success");
             //var response = JSON.parse(result.responseText);
             response = result;
+
+            if(response.response){
+                $('pre.response', resultContainer)
+                    .text(response.response);
+            }
+
             if (response.call) {
                 $('pre.call', resultContainer)
                     .text(response.call);
@@ -301,31 +304,40 @@
         })
         .error(function(err, text) {
             var response;
-            console.log("at error");
-            if (err.responseText !== '') {
-            /*    console.log(err.responseText);
-                var result = JSON.parse(err.responseText),
-                    headers = formatJSON(result.headers);
+            var textblock = "";
+                try {
+                var response = JSON.parse(err.responseText);
 
-                if (result.headers && result.headers['content-type']) {
-                    // Format the result.response and assign it to response
-                    response = livedocs.formatData(result.response, result.headers['content-type']);
+                if(response.response){
+                    textblock = response.response;
                 } else {
-                    response = result.response;
+                    textblock = 'Error';
                 }
-            */
-                response = err.responseText;
-            } else {
-                response = 'Error';
+
+                if (response.call) {
+                    $('pre.call', resultContainer)
+                        .text(response.call);
+                }
+
+                if (response.code) {
+                    $('pre.code', resultContainer)
+                        .text(response.code);
+                }
+
+                if (response.headers) {
+                    $('pre.headers', resultContainer)
+                        .text(formatJSON(response.headers));
+                }
+            } catch(error){
+                textblock = err.responseText;
             }
 
             $('pre.response', resultContainer)
                 .toggleClass('error', true)
-                .text(response);
+                .text(textblock);
+
         })
         .complete(function(result, text) {
-            console.log("on complete");
-            console.log(self);
             $('#loader',self).remove();
         })
     })

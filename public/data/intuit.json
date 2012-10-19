@@ -37,7 +37,7 @@
      ]
   },
     {
-        "name":"DiscoverAndAddAccounts",
+        "name":"Discover",
         "methods":[
             {
                 "MethodName":"Default",
@@ -46,6 +46,42 @@
                 "URI":"/institutions/:institution_id/logins",
                 "RequiresOAuth":"Y",
                 "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "institution_id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"MFA",
+                "Synopsis":"This API returns detailed information for the supplied institution ID.",
+                "HTTPMethod":"POST",
+                "URI":"/institutions/:institution_id/logins",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "Content-Type",
+                        "Default": "application/xml"
+                    },
+                    {
+                        "Name": "challengeSessionId",
+                        "Default": ""
+                    },
+                    {
+                        "Name": "challengeNodeId",
+                        "Default": ""
+                    }
+                ],
                 "parameters":[
                     {
                         "Name": "institution_id",
@@ -56,7 +92,21 @@
                 ]
             }
         ]
-    }
+    },
+    {
+        "name":"DeleteCustomer",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API deletes the currently authenticated customer",
+                "HTTPMethod":"DELETE",
+                "URI":"/customers",
+                "RequiresOAuth":"Y",
 
+                "parameters":[
+                ]
+            }
+        ]
+    }
  ]
 }

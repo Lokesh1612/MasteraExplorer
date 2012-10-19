@@ -132,7 +132,8 @@ function getSavedInfo(req, res, next){
         key + ':apiSecret',
         key + ':params',
         key + ':savedParams',
-        key + ':savedPostData'
+        key + ':savedPostData',
+        key + ':savedHeaders'
     ], function(err, result) {
         if (err) {
             console.log(util.inspect(err));
@@ -149,21 +150,33 @@ function getSavedInfo(req, res, next){
             req.session[apiName].defaultAccessSecret=result[1];
             req.session[apiName].defaultKey=result[2];
             req.session[apiName].defaultSecret=result[3];
-            if(result[4]!=null){
-                req.session[apiName].params = JSON.parse(result[4]);
-            }
-            if(result[5]!=null){
-                req.session[apiName].savedParams = JSON.parse(result[5]);
-            }
-            if(result[6]!=null){
-                req.session[apiName].requestBody = JSON.parse(result[6]);
-            }
-            next();
         }
         else {
-            req.session[apiName] = {};
-            next();
+    //        req.session[apiName] = {};
         }
+
+        if(result[4]!=null){
+            req.session[apiName].params = JSON.parse(result[4]);
+        }
+        else
+            req.session[apiName].params = {};
+        if(result[5]!=null){
+            req.session[apiName].savedParams = JSON.parse(result[5]);
+        }
+        else
+            req.session[apiName].savedParams = {};
+        if(result[6]!=null){
+            req.session[apiName].savedRequestBody = JSON.parse(result[6]);
+        }
+        else
+            req.session[apiName].savedRequestBody = {};
+        if(result[7]!=null){
+            req.session[apiName].savedHeaders = JSON.parse(result[7]);
+        }
+        else
+            req.session[apiName].savedHeaders={};
+
+        next();
     });
 }
 
@@ -175,13 +188,15 @@ function saveRequest(req, res, next) {
     else
         key = req.sessionID + ':' + apiName;
     // Unique key using the sessionID and API name to store tokens and secrets
-    var dataToSave = {};
-    dataToSave[req.body.endpointName+':'+req.body.methodName]=req.body.params;
+
     req.session[req.body.apiName].savedParams[req.body.endpointName+':'+req.body.methodName]=req.body.params
     db.set(key + ':savedParams' , JSON.stringify(req.session[req.body.apiName].savedParams), redis.print);
-    var postDataToSave = {};
-    postDataToSave[req.body.endpointName+':'+req.body.methodName]=req.body.requestBody;
-    db.set(key + ':savedPostData' , JSON.stringify(postDataToSave), redis.print);
+
+    req.session[req.body.apiName].savedRequestBody[req.body.endpointName+':'+req.body.methodName]=req.body.requestBody;
+    db.set(key + ':savedPostData' , JSON.stringify(req.session[req.body.apiName].savedRequestBody), redis.print);
+
+    req.session[req.body.apiName].savedHeaders[req.body.endpointName+':'+req.body.methodName]=req.body.headers;
+    db.set(key + ':savedHeaders' , JSON.stringify(req.session[req.body.apiName].savedHeaders), redis.print);
     next();
 }
 
@@ -190,7 +205,6 @@ function retrieveRequest(req, res, next) {
 }
 
 function handleCredentials(req, res, next){
-    console.log("here");
     if(req.body.action && req.body.action == "remove"){
         removeCredentials(req, res, next);
     }
@@ -275,12 +289,10 @@ function oauth(req, res, next){
             if (config.debug) {
                 console.log('req.session: ' + util.inspect(req.session));
                 console.log('headers: ' + util.inspect(req.headers));
-
-                console.log(util.inspect(oa));
                 console.log('sessionID: ' + util.inspect(req.sessionID));
             };
 
-            oa.getOAuthRequestToken(function(err, oauthToken, oauthTokenSecret, results) {
+            oa.getOAuthRequestToken(function(err, oauthToken, oauthTokenSecret, proxy, results) {
                 if (err) {
                     res.send("Error getting OAuth request token : " + util.inspect(err), 500);
                 } else {
@@ -399,7 +411,8 @@ function processRequest(req, res, next) {
         httpMethod = reqQuery.httpMethod,
         apiKey = reqQuery.apiKey,
         apiSecret = reqQuery.apiSecret,
-        apiName = reqQuery.apiName
+        apiName = reqQuery.apiName,
+        headers = reqQuery.headers
     apiConfig = apisConfig[apiName];
 
     var key;
@@ -418,7 +431,7 @@ function processRequest(req, res, next) {
                 // If the param is actually a part of the URL, put it in the URL and remove the param
                 if (!!regx.test(methodURL)) {
                     methodURL = methodURL.replace(regx, params[param]);
-                    delete params[param]
+                   // delete params[param];
                 }
             } else {
                 delete params[param]; // Delete blank params
@@ -470,11 +483,12 @@ function processRequest(req, res, next) {
                         apiSecret = results[1],
                         accessToken = results[2],
                         accessTokenSecret = results[3];
-                    console.log(apiKey);
-                    console.log(apiSecret);
-                    console.log(accessToken);
-                    console.log(accessTokenSecret);
-
+                    if(config.debug) {
+                        console.log("apiKey:"+ apiKey);
+                        console.log("apiSecret:" +apiSecret);
+                        console.log("accessToken:" +accessToken);
+                        console.log("accessTokenSecret:" +accessTokenSecret);
+                    };
                     var oa = new OAuth(apiConfig.oauth.requestURL || null,
                         apiConfig.oauth.accessURL || null,
                         apiKey || null,
@@ -483,21 +497,14 @@ function processRequest(req, res, next) {
                         null,
                         apiConfig.oauth.crypt);
 
-                    if (config.debug) {
-                        console.log('Access token: ' + accessToken);
-                        console.log('Access token secret: ' + accessTokenSecret);
-                        console.log('key: ' + key);
-                    };
-
-                    var postContentType = req.body.postContentType;
-
-                    oa.getProtectedResource(privateReqURL, httpMethod, accessToken, accessTokenSecret, requestBody, postContentType, proxy, function (error, data, response) {
+                    oa.getProtectedResource(privateReqURL, httpMethod, accessToken, accessTokenSecret, requestBody, headers, proxy, function (error, data, response) {
                         req.call = privateReqURL;
 
                         // console.log(util.inspect(response));
                         if (error) {
                             console.log('Got error: ' + util.inspect(error));
 
+                            req.resultHeaders = response.headers;
                             if (error.data == 'Server Error' || error.data == '') {
                                 req.result = 'Server Error';
                             } else {
@@ -509,12 +516,11 @@ function processRequest(req, res, next) {
                             next();
                         } else {
                             req.resultHeaders = response.headers;
-							if(response.headers['content-type'].indexOf("xml") >=0) {
+							if(response.headers['content-type'].indexOf("xml") >=0 || data == "") {
 								req.result = data;
 							}
 							else
 								req.result = JSON.parse(data);
-
                             next();
                         }
                     });
@@ -540,15 +546,12 @@ function processRequest(req, res, next) {
                         if (error.data == 'Server Error' || error.data == '') {
                             req.result = 'Server Error';
                         } else {
-                            console.log(util.inspect(error));
                             body = error.data;
                         }
 
                         res.statusCode = error.statusCode;
 
                     } else {
-                        console.log(util.inspect(data));
-
                         var responseContentType = response.headers['content-type'];
 
                         switch (true) {
@@ -656,6 +659,7 @@ function processRequest(req, res, next) {
             options.headers = headers;
         }
 
+        //TODO: FIX headers for unsecured call
         if (!options.headers['Content-Length']) {
             if (requestBody) {
                 options.headers['Content-Length'] = requestBody.length;
@@ -748,21 +752,28 @@ function processRequest(req, res, next) {
 // Dynamic Helpers
 // Passes variables to the view
 app.dynamicHelpers({
-    defaultParam: function(req, res) {
+    defaultParams: function(req, res) {
         if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['params'])
             return req.session[req.params.api]['params'];
     },
-    savedParams: function(req, res) {
+    HelperParams: function(req, res) {
         if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedParams'])
             return req.session[req.params.api]['savedParams'];
     },
-    savedrequestBody: function(req, res) {
-        if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedParams'])
-            return req.session[req.params.api]['requestBody'];
+    HelperRequestBody: function(req, res) {
+        if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedRequestBody'])
+            return req.session[req.params.api]['savedRequestBody'];
+    },
+    defaultHeaders: function(req, res) {
+    if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['headers'])
+        return req.session[req.params.api]['headers'];
+},
+    HelperHeaders: function(req, res) {
+        if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedHeaders'])
+            return req.session[req.params.api]['savedHeaders'];
     },
     session: function(req, res) {
         // If api wasn't passed in as a parameter, check the path to see if it's there
-        console.log(req.params.api);
         if (!req.params.api) {
             pathName = req.url.replace('/','');
             // Is it a valid API - if there's a config file we can assume so
@@ -858,7 +869,6 @@ app.get('/authSuccess/:api', oauthSuccess, function(req, res) {
 // API shortname, all lowercase
 app.get('/:api([^\.]+)', getSavedInfo, function(req, res) {
     req.params.api=req.params.api.replace(/\/$/,'');
-    console.log(req.params.api);
     res.render('api');
 });
 
