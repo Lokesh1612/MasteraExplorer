@@ -74,5 +74,22 @@
                 "crypt": "HMAC-SHA1"
             },
             "keyParam":""
+    },
+    "intuitIDS": {
+        "name": "IntuitIDS",
+        "protocol": "https",
+        "baseURL": "services.intuit.com",
+        "publicPath": "",
+        "auth": "oauth",
+        "privatePath": "/sb",
+        "oauth": {
+            "type": "three-legged",
+            "requestURL": "https://oauth.intuit.com/oauth/v1/get_request_token",
+            "signinURL":  "https://appcenter.intuit.com/Connect/Begin?oauth_token=",
+            "accessURL":  "https://oauth.intuit.com/oauth/v1/get_access_token",
+            "version": "1.0",
+            "crypt": "HMAC-SHA1"
+        },
+        "keyParam":""
     }
 }

@@ -1,0 +1,27 @@
+{
+"endpoints":[
+  {
+     "name":"Account",
+     "methods":[
+        {
+           "MethodName":"Default",
+           "Synopsis":"Account is a component of a Chart Of Accounts, and is part of a Ledger. Used to record a total monetary amount allocated against a specific use.",
+           "HTTPMethod":"POST",
+           "URI":"/account/v2/:realmId",
+           "RequiresOAuth":"Y",
+           "RequiresPostData":"Y",
+           "PostContentType":"application/xml",
+           "parameters":[
+               {
+                   "Name": "realmId",
+                   "Required": "Y",
+                   "Default": "",
+                   "Type": "string"
+               }
+            ]
+        }
+
+      ]
+  }
+]
+}

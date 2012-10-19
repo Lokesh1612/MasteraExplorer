@@ -28,6 +28,13 @@ try {
     process.exit(1);
 }
 
+//proxy definition
+var proxy={
+    host:'127.0.0.1',
+    port:8888,
+    localAddress: '127.0.0.1'
+};
+
 //
 // Redis connection
 //
@@ -124,7 +131,8 @@ function getSavedInfo(req, res, next){
         key + ':apiKey',
         key + ':apiSecret',
         key + ':params',
-        key + ':savedParams'
+        key + ':savedParams',
+        key + ':savedPostData'
     ], function(err, result) {
         if (err) {
             console.log(util.inspect(err));
@@ -147,6 +155,9 @@ function getSavedInfo(req, res, next){
             if(result[5]!=null){
                 req.session[apiName].savedParams = JSON.parse(result[5]);
             }
+            if(result[6]!=null){
+                req.session[apiName].requestBody = JSON.parse(result[6]);
+            }
             next();
         }
         else {
@@ -165,8 +176,12 @@ function saveRequest(req, res, next) {
         key = req.sessionID + ':' + apiName;
     // Unique key using the sessionID and API name to store tokens and secrets
     var dataToSave = {};
-    dataToSave[req.body.endpointName]=req.body.params;
-    db.set(key + ':savedParams' , JSON.stringify(dataToSave), redis.print);
+    dataToSave[req.body.endpointName+':'+req.body.methodName]=req.body.params;
+    req.session[req.body.apiName].savedParams[req.body.endpointName+':'+req.body.methodName]=req.body.params
+    db.set(key + ':savedParams' , JSON.stringify(req.session[req.body.apiName].savedParams), redis.print);
+    var postDataToSave = {};
+    postDataToSave[req.body.endpointName+':'+req.body.methodName]=req.body.requestBody;
+    db.set(key + ':savedPostData' , JSON.stringify(postDataToSave), redis.print);
     next();
 }
 
@@ -426,8 +441,13 @@ function processRequest(req, res, next) {
             path: apiConfig.publicPath + methodURL// + ((paramString.length > 0) ? '?' + paramString : "")
         };
 
-    if (['POST','DELETE','PUT'].indexOf(httpMethod) !== -1) {
-        var requestBody = query.stringify(params);
+    var requestBody = "";
+
+    if (['POST','DELETE','PUT'].indexOf(httpMethod) !== -1 && !req.body.requestBody) {
+        requestBody = query.stringify(params);
+    }
+    else if(['POST','DELETE','PUT'].indexOf(httpMethod) !== -1 && req.body.requestBody) {
+        requestBody = req.body.requestBody;
     }
 
     if (apiConfig.oauth) {
@@ -469,7 +489,9 @@ function processRequest(req, res, next) {
                         console.log('key: ' + key);
                     };
 
-                    oa.getProtectedResource(privateReqURL, httpMethod, accessToken, accessTokenSecret, function (error, data, response) {
+                    var postContentType = req.body.postContentType;
+
+                    oa.getProtectedResource(privateReqURL, httpMethod, accessToken, accessTokenSecret, requestBody, postContentType, proxy, function (error, data, response) {
                         req.call = privateReqURL;
 
                         // console.log(util.inspect(response));
@@ -733,6 +755,10 @@ app.dynamicHelpers({
     savedParams: function(req, res) {
         if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedParams'])
             return req.session[req.params.api]['savedParams'];
+    },
+    savedrequestBody: function(req, res) {
+        if(req.params.api && req.session[req.params.api] && req.session[req.params.api]['savedParams'])
+            return req.session[req.params.api]['requestBody'];
     },
     session: function(req, res) {
         // If api wasn't passed in as a parameter, check the path to see if it's there

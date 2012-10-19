@@ -24,6 +24,7 @@
             "HTTPMethod":"GET",
             "URI":"/institutions/:institution_id",
             "RequiresOAuth":"Y",
+
             "parameters":[
                 {
                     "Name": "institution_id",
@@ -34,7 +35,28 @@
             ]
          }
      ]
-  }
+  },
+    {
+        "name":"DiscoverAndAddAccounts",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API returns detailed information for the supplied institution ID.",
+                "HTTPMethod":"POST",
+                "URI":"/institutions/:institution_id/logins",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "parameters":[
+                    {
+                        "Name": "institution_id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    }
 
  ]
 }

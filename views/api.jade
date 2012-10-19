@@ -96,6 +96,8 @@ ul
                             input(type='hidden', name='oauth', value=secure)
                             input(type='hidden', name='methodUri', value=method.URI)
                             input(type='hidden', name='endpointName', value=endpoint.name)
+                            input(type='hidden', name='postContentType', value=method.PostContentType)
+                            input(type='hidden', name='methodName', value=method.MethodName)
                             span.description #{method.Synopsis}
                             br
                             br
@@ -147,10 +149,11 @@ ul
                                                                         - defaultValue = value
                                                             - if(savedParams != null)
                                                                 -each value,key in savedParams
-                                                                    - if(key == endpoint.name)
+                                                                    - if(key == endpoint.name+':'+method.MethodName)
                                                                         -each value1,key1 in value
                                                                             -if (key1 == parameter.Name)
                                                                                 -defaultValue = value1
+                                                            label #{defaultValue}
                                                             input(name='params[' + parameter.Name + ']', value=defaultValue, placeholder=className)
                                                     td.type=parameter.Type
                                                     td.description
@@ -160,6 +163,7 @@ ul
                                                                 - each description, choice in parameter.EnumeratedDescription
                                                                     dt #{choice}
                                                                     dd #{description}
+
                             - if (method.headers && method.headers.length > 0)
                                 div.headers
                                     h4.title
@@ -184,6 +188,18 @@ ul
                                                     td
                                                         a(href='#', class='remove') Remove
                                         a(href='#', class='add-headers') Add Header
+
+                            - if(method.RequiresPostData =='Y')
+                                label(for='requestBody') POST
+                                div
+                                    -var defaultValue = ''
+                                    - if(savedrequestBody != null)
+                                        - each value,key in savedrequestBody
+                                            - if(key == endpoint.name+':'+method.MethodName)
+                                                -defaultValue = value
+                                    textarea(id='requestBody', name='requestBody', cols='200')
+                                        #{defaultValue}
+
                             // Create header fields and button to add/remove headers.
                             - if (!method['read-only'])
                                 input(type='submit', id=method.MethodName, value='Try it!')
