@@ -16,42 +16,42 @@ form#credentials
              - if (apiInfo.oauth)
                  input(type='hidden', name='oauth', value='authrequired')
 
-             - if (session.defaultKey)
+             //- if (session.defaultKey)
                  - var defaultKey =session.defaultKey
-             - else
+             //- else
                  - var defaultKey =''
 
-             - if (session.defaultSecret)
+             //- if (session.defaultSecret)
                  - var defaultSecret =session.defaultSecret
-             - else
+             //- else
                  - var defaultSecret =''
-             - if (session.defaultAccessKey)
+             //- if (session.defaultAccessKey)
                  - var defaultAccessKey =session.defaultAccessKey
-             - else
+             //- else
                  - var defaultAccessKey =''
-             - if (session.defaultAccessSecret)
+             //- if (session.defaultAccessSecret)
                  - var defaultAccessSecret =session.defaultAccessSecret
-             - else
+             //- else
                  - var defaultAccessSecret =''
 
              div
                  label(for='key') API Key
-                 input(id='key', name='key', value=defaultKey, placeholder="Required", style='color=#EEEEEE')
+                 input(id='key', name='key', placeholder="Required", style='color=#EEEEEE')
              div
                  - if (apiInfo.oauth || apiInfo.signature)
                      label(for='secret') Shared Secret
-                     input(id='secret', name='secret', value=defaultSecret, placeholder="Required", style='color=#EEEEEE')
+                     input(id='secret', name='secret', placeholder="Required", style='color=#EEEEEE')
              - if(apiInfo.oauth && apiInfo.oauth.type !='two-legged')
                  div
                      label(for='accessKey') Access Key
-                     input(id='accessKey', name='accessKey', value=defaultAccessKey, style='color=#EEEEEE')
+                     input(id='accessKey', name='accessKey', style='color=#EEEEEE')
                  div
                      label(for='accessSecret') Access Key Secret
-                     input(id='accessSecret', name='accessSecret', value=defaultAccessSecret, style='color=#EEEEEE')
+                     input(id='accessSecret', name='accessSecret', style='color=#EEEEEE')
                  div
                     input(name='save', value='Oauth / Save', type='submit', id='oauth-auth')
              input(type='hidden', name='action', value='submit', id='submitClicked')
-             input(name='default', value='Get Default', type='submit', id='oauth-auth', onclick="javascript:document.getElementById('submitClicked').value='getDefault'")
+            // input(name='default', value='Get Default', type='submit', id='oauth-auth', onclick="javascript:document.getElementById('submitClicked').value='getDefault'")
         - else if (authed && apiInfo.oauth)
             section(class='credentials ' + authed)
                 div
@@ -207,7 +207,7 @@ ul
                                         - each value,key in HelperRequestBody
                                             - if(key == endpoint.name+':'+method.MethodName)
                                                 -defaultValue = value
-                                    textarea(id='requestBody', name='requestBody', cols='200')
+                                    textarea(id='requestBody', name='requestBody', cols='200', class="expand")
                                         #{defaultValue}
 
                             // Create header fields and button to add/remove headers.

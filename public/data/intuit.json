@@ -37,7 +37,7 @@
      ]
   },
     {
-        "name":"Discover",
+        "name":"DiscoverAndAddAccounts",
         "methods":[
             {
                 "MethodName":"Default",
@@ -94,11 +94,228 @@
         ]
     },
     {
+        "name":"GetCustomerAccounts",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API returns a list of all accounts belonging to the authenticated user making the call.",
+                "HTTPMethod":"GET",
+                "URI":"/accounts",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                ]
+            }
+        ]
+    },
+    {
+        "name":"GetLoginAccounts",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API returns a list of all accounts belonging to the login specified in the URI path.",
+                "HTTPMethod":"GET",
+                "URI":"/logins/:login_id/accounts",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "login_id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"GetAccount",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API returns all information about the account. If the last refresh date of the account is older than the “refresh-cache-seconds-to-live”, a non-interactive refresh of that account is attempted before it is returned. If that refresh fails the account will still be returned, but the aggrSuccessDate field of the account data will not be updated and a numeric error code indicating the reason for the failure will be found in the aggrStatusCode field.",
+                "HTTPMethod":"GET",
+                "URI":"/v1/accounts/:account_id",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "account_id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"GetAccountTransactions",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API retrieves all transactions for an account over the specified date range. If the end date of the range is later than the last successful refresh date of the account, a refresh will be attempted before transactions are retrieved. If the refresh fails, the TransactionList is still returned but will have details of the failure in the notRefreshedReason attribute of the TransactionList entity.",
+                "HTTPMethod":"GET",
+                "URI":"/accounts/:account_Id/transactions",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "account_Id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "txnStartDate",
+                        "Required": "N",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "txnEndDate",
+                        "Required": "N",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"UpdateInstitutionLogin",
+        "methods":[
+            {
+                "MethodName":"Default (Explicit Refresh)",
+                "Synopsis":"This API is used to update the account type of an added account.",
+                "HTTPMethod":"PUT",
+                "URI":"/logins/:loginId",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "loginId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "refresh",
+                        "Required": "N",
+                        "Default": "",
+                        "Type": "boolean"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Update Credential",
+                "Synopsis":"",
+                "HTTPMethod":"PUT",
+                "URI":"/logins/:loginId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "loginId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "refresh",
+                        "Required": "N",
+                        "Default": "",
+                        "Type": "boolean"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Update Credential - MFA",
+                "Synopsis":"Provide Challenge data",
+                "HTTPMethod":"PUT",
+                "URI":"/logins/:loginId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "Content-Type",
+                        "Default": "application/xml"
+                    },
+                    {
+                        "Name": "challengeSessionId",
+                        "Default": ""
+                    },
+                    {
+                        "Name": "challengeNodeId",
+                        "Default": ""
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "loginId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"UpdateAccountType",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API updates the type of an account from \"Other\" to some concrete account type.",
+                "HTTPMethod":"PUT",
+                "URI":"/accounts/:account_Id",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "account_Id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"DeleteAccount",
+        "methods":[
+            {
+                "MethodName":"Default",
+                "Synopsis":"This API is used to delete a user's account.",
+                "HTTPMethod":"DELETE",
+                "URI":"/accounts/:account_id",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "account_id",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "name":"DeleteCustomer",
         "methods":[
             {
                 "MethodName":"Default",
-                "Synopsis":"This API deletes the currently authenticated customer",
+                "Synopsis":"This API deletes the currently authenticated customer.",
                 "HTTPMethod":"DELETE",
                 "URI":"/customers",
                 "RequiresOAuth":"Y",

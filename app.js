@@ -29,12 +29,13 @@ try {
 }
 
 //proxy definition
-var proxy={
+/*var proxy={
     host:'127.0.0.1',
     port:8888,
     localAddress: '127.0.0.1'
 };
-
+*/
+var proxy=null;
 //
 // Redis connection
 //
@@ -135,14 +136,15 @@ function getSavedInfo(req, res, next){
         key + ':savedPostData',
         key + ':savedHeaders'
     ], function(err, result) {
+        if(!req.session[apiName]){
+            req.session[apiName] = {};
+        }
         if (err) {
             console.log(util.inspect(err));
             next();
         }
         else if(result[0] != null && result[1] != null && result[2] != null && result[3] != null){
-            if(!req.session[apiName]){
-                req.session[apiName] = {};
-            }
+
             req.session[apiName].authed = true
             if(!apisConfig[apiName])
                 apisConfig[apiName]={};
@@ -208,11 +210,13 @@ function handleCredentials(req, res, next){
     if(req.body.action && req.body.action == "remove"){
         removeCredentials(req, res, next);
     }
-    else if(req.body.action && req.body.action == "getDefault"){
+ /* //Get Default
+        else if(req.body.action && req.body.action == "getDefault"){
         var apiName = req.body.apiName;
         if(apisConfig[apiName].default)
         res.send({ 'default': apisConfig[apiName].default });
     }
+ */
     else if(!req.body.accessKey || !req.body.accessSecret){
         oauth(req, res, next);
     }
@@ -406,7 +410,6 @@ function processRequest(req, res, next) {
     };
 
     var reqQuery = req.body,
-        params = reqQuery.params || {},
         methodURL = reqQuery.methodUri,
         httpMethod = reqQuery.httpMethod,
         apiKey = reqQuery.apiKey,
@@ -414,6 +417,14 @@ function processRequest(req, res, next) {
         apiName = reqQuery.apiName,
         headers = reqQuery.headers
     apiConfig = apisConfig[apiName];
+
+    var params = new Object();
+    if(reqQuery.params){
+        for (var item in reqQuery.params){
+            params[item]=reqQuery.params[item];
+        }
+    }
+
 
     var key;
     if(req.session.loggedin)
@@ -431,7 +442,7 @@ function processRequest(req, res, next) {
                 // If the param is actually a part of the URL, put it in the URL and remove the param
                 if (!!regx.test(methodURL)) {
                     methodURL = methodURL.replace(regx, params[param]);
-                   // delete params[param];
+                    delete params[param];
                 }
             } else {
                 delete params[param]; // Delete blank params

@@ -17,13 +17,13 @@
     // Toggle show/hide of method details, form, and results
     $('li.method > div.title').click(function() {
         $('form', this.parentNode).slideToggle();
-    })
+    });
 
     // Toggle an endpoint
     $('li.endpoint > h3.title span.name').click(function() {
         $('ul.methods', this.parentNode.parentNode).slideToggle();
         $(this.parentNode.parentNode).toggleClass('expanded')
-    })
+    });
 
     // Toggle all endpoints
     $('#toggle-endpoints').click(function(event) {
@@ -53,7 +53,7 @@
             }
         }
 
-    })
+    });
 
     // Toggle all methods
     $('#toggle-methods').click(function(event) {
@@ -90,7 +90,7 @@
         for (var z = 0; z < allEndpointsLength; z++) {
             $(allEndpoints[z]).toggleClass('expanded', true);
         }
-    })
+    });
 
     // List methods for a particular endpoint.
     // Hide all forms if visible
@@ -114,7 +114,7 @@
 
         $(endpoint).toggleClass('expanded', true);
 
-    })
+    });
 
     // Expand methods for a particular endpoint.
     // Show all forms and list all methods
@@ -305,7 +305,7 @@
         .error(function(err, text) {
             var response;
             var textblock = "";
-                try {
+            try {
                 var response = JSON.parse(err.responseText);
 
                 if(response.response){
@@ -313,12 +313,10 @@
                 } else {
                     textblock = 'Error';
                 }
-
                 if (response.call) {
                     $('pre.call', resultContainer)
                         .text(response.call);
                 }
-
                 if (response.code) {
                     $('pre.code', resultContainer)
                         .text(response.code);
@@ -339,7 +337,7 @@
         })
         .complete(function(result, text) {
             $('#loader',self).remove();
-        })
+        });
     })
 
 })();
