@@ -80,6 +80,8 @@ ul
                         a(href='#') Expand Methods
             - if (endpoint.methods.length)
             ul.methods.hidden
+                -if(endpoint.Synopsis)
+                    !{endpoint.Synopsis}
                 - each method in endpoint.methods
                     - var httpmethod =method.HTTPMethod.toLowerCase()
                     - if (method.RequiresOAuth ==='Y' || method.RequiresOAuth ===true)

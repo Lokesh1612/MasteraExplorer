@@ -29,13 +29,13 @@ try {
 }
 
 //proxy definition
-/*var proxy={
+var proxy={
     host:'127.0.0.1',
     port:8888,
     localAddress: '127.0.0.1'
 };
-*/
-var proxy=null;
+
+//var proxy=null;
 //
 // Redis connection
 //
@@ -200,10 +200,6 @@ function saveRequest(req, res, next) {
     req.session[req.body.apiName].savedHeaders[req.body.endpointName+':'+req.body.methodName]=req.body.headers;
     db.set(key + ':savedHeaders' , JSON.stringify(req.session[req.body.apiName].savedHeaders), redis.print);
     next();
-}
-
-function retrieveRequest(req, res, next) {
-
 }
 
 function handleCredentials(req, res, next){
@@ -379,7 +375,7 @@ function oauthSuccess(req, res, next){
             console.log(util.inspect(oa));
         };
 
-        oa.getOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
+        oa.getOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, req.query.oauth_verifier, proxy, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
             if (error) {
                 res.send("Error getting OAuth access token : " + util.inspect(error) + "["+oauthAccessToken+"]"+ "["+oauthAccessTokenSecret+"]"+ "["+util.inspect(results)+"]", 500);
             } else {
@@ -850,14 +846,21 @@ app.all('/credential', handleCredentials, function(req, res){
     res.send({});
 });
 
+// OAuth callback page, closes the window immediately after storing access token/secret
+app.get('/authSuccess/:api', oauthSuccess, function(req, res) {
+    res.render('authSuccess', {
+        title: 'OAuth Successful'
+    });
+});
+
 app.get('/openid/intuit',
-    passport.authenticate('intuit', { failureRedirect: '/login' }),
+    passport.authenticate('intuit', { failureRedirect: '/' }),
     function(req, res) {
         res.redirect('/');
     });
 
 app.get('/openid/intuit/return',
-    passport.authenticate('intuit', { failureRedirect: '/login' }),
+    passport.authenticate('intuit', { failureRedirect: '/' }),
     function(req, res) {
         if(req.session.passport.user)
             req.session.loggedin = true;
@@ -868,13 +871,6 @@ app.get('/logout', function(req, res){
     req.session.loggedin = false
     req.logout();
     res.redirect('/');
-});
-
-// OAuth callback page, closes the window immediately after storing access token/secret
-app.get('/authSuccess/:api', oauthSuccess, function(req, res) {
-    res.render('authSuccess', {
-        title: 'OAuth Successful'
-    });
 });
 
 // API shortname, all lowercase
@@ -888,8 +884,8 @@ app.get('/:api([^\.]+)', getSavedInfo, function(req, res) {
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 passport.use(new IntuitStrategy({
-        returnURL: 'http://localhost:3000/openid/intuit/return',
-        realm: 'http://localhost:3000/'
+        returnURL: 'http://'+config.address+':'+config.port+'/openid/intuit/return',
+        realm: 'http://'+config.address+':'+config.port+'/'
     },
     function(identifier, profile, done) {
         // asynchronous verification, for effect...

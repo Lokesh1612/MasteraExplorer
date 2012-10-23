@@ -1,6 +1,6 @@
 {
-    "intuit": {
-            "name": "Intuit",
+    "Agg&Cat": {
+            "name": "Agg&Cat",
             "protocol": "https",
             "baseURL": "financialdatafeed.platform.intuit.com",
             "publicPath": "",
@@ -21,5 +21,39 @@
                 "crypt": "HMAC-SHA1"
             },
             "keyParam":""
+    },
+    "FMS": {
+        "name": "FMS (IDS V3)",
+        "protocol": "https",
+        "baseURL": "services.intuit.com",
+        "publicPath": "",
+        "auth": "oauth",
+        "privatePath": "/v3",
+        "oauth": {
+            "type": "three-legged",
+            "requestURL": "https://oauth.intuit.com/oauth/v1/get_request_token",
+            "signinURL":  "https://appcenter.intuit.com/Connect/Begin?oauth_token=",
+            "accessURL":  "https://oauth.intuit.com/oauth/v1/get_access_token",
+            "version": "1.0",
+            "crypt": "HMAC-SHA1"
+        },
+        "keyParam":""
+    },
+    "IDS": {
+        "name": "IDS",
+        "protocol": "https",
+        "baseURL": "services.intuit.com",
+        "publicPath": "",
+        "auth": "oauth",
+        "privatePath": "/sb",
+        "oauth": {
+            "type": "three-legged",
+            "requestURL": "https://oauth.intuit.com/oauth/v1/get_request_token",
+            "signinURL":  "https://appcenter.intuit.com/Connect/Begin?oauth_token=",
+            "accessURL":  "https://oauth.intuit.com/oauth/v1/get_access_token",
+            "version": "1.0",
+            "crypt": "HMAC-SHA1"
+        },
+        "keyParam":""
     }
 }

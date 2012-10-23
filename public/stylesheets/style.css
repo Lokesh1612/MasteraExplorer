@@ -148,6 +148,16 @@ nav li {
   list-style-image: none;
 }
 
+.endpoint span li{
+    margin: 0 0 0 10px;
+    list-style: circle;
+    list-style-image: none;
+}
+
+.endpoint span p,.endpoint span ul {
+    margin: 10px;
+}
+
 small {
   font-size: 85%;
 }
@@ -434,7 +444,7 @@ li {
 
 .endpoint > .title {
   font-weight: normal;
-  padding: 20px 0 10px 10px;
+  padding: 10px 0 0px 0px;
   overflow: hidden;
   *zoom: 1;
 }
