@@ -832,7 +832,7 @@ app.get('/', function(req, res) {
     });
 });
 
-app.post('/processReq', oauth, saveRequest, processRequest, function(req, res) {
+app.post('/processReq', saveRequest, oauth, processRequest, function(req, res) {
     var result = {
         headers: req.resultHeaders,
         response: req.result,
