@@ -1,0 +1,242 @@
+{
+"endpoints":[
+    {
+                "name":"Account",
+                "Synopsis":"<span><p>Account is a component of a Chart Of Accounts, and is part of a Ledger. Used to record a total monetary amount allocated against a specific use. Accounts are one of five basic types:</p><ul><li>Asset</li><li>Liability</li><li>Revenue (Income)</li><li>Expenses</li><li>Equity</li></ul><br/><h5>Business Rules</h5><p>The Account object has the following business rules and validations:</p><ul><li> The account name must be unique.</li><li> The account name cannot contain a colon (:).</li></ul></span>",
+                "methods":[
+                    {
+                        "MethodName":"Create",
+                        "Synopsis":"This operation creates a new entity of the type Account",
+                        "HTTPMethod":"POST",
+                        "URI":"/account/v2/:realmId",
+                        "RequiresOAuth":"Y",
+                        "RequiresPostData":"Y",
+                        "headers":[
+                            {
+                                "Name": "content-type",
+                                "Default": "application/xml"
+                            }
+                        ],
+                        "parameters":[
+                            {
+                                "Name": "realmId",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "MethodName":"Update",
+                        "Synopsis":"This operation Updates entity of the type Account",
+                        "HTTPMethod":"POST",
+                        "URI":"/account/v2/:realmId",
+                        "RequiresOAuth":"Y",
+                        "RequiresPostData":"Y",
+                        "headers":[
+                            {
+                                "Name": "content-type",
+                                "Default": "application/xml"
+                            }
+                        ],
+                        "parameters":[
+                            {
+                                "Name": "realmId",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "MethodName":"Retrieve all",
+                        "Synopsis":"This operation retrieve all entities of type Account",
+                        "HTTPMethod":"GET",
+                        "URI":"/account/v2/:realmId",
+                        "RequiresOAuth":"Y",
+                        "parameters":[
+                            {
+                                "Name": "realmId",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "MethodName":"Retrieve by ID",
+                        "Synopsis":"This operation retrieve an entity of type account searched using ID",
+                        "HTTPMethod":"GET",
+                        "URI":"/account/v2/:realmId/:accountId",
+                        "RequiresOAuth":"Y",
+                        "parameters":[
+                            {
+                                "Name": "realmId",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "string"
+                            },
+                            {
+                                "Name": "accountId",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "string"
+                            },
+                            {
+                                "Name": "idDomain",
+                                "Required": "Y",
+                                "Default": "",
+                                "Type": "enumerated",
+                                "EnumeratedList": [
+                                    "NG",
+                                    "QB"
+                                ]
+                            }
+                        ]
+                    },
+            {
+                "MethodName":"Query Filter",
+                "Synopsis":"This operation retrieves entites of type Account using a Query Filter",
+                "HTTPMethod":"POST",
+                "URI":"/account/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+
+        ]
+    },
+    {
+        "name":"Customer",
+        "Synopsis": "<span><p>A customer is a consumer of the service or product that your business offers. The Customer object allows you to categorize customers according to your business requirements. For example, you can create a category of customers to indicate the industry that a customer represents, the geographic location of a customer, or the awareness of the business. Categorization of customers is useful for reports. While creating a customer, avoid entering any job data. If you enter a job data, the system can prevent you from adding any more jobs for that customer. You must first create a customer, and then create a job using that customer as a parent.</p><p></p><h5>Business Rules</h5><p>The Customer object has the following business rules and validations:</p><ul><li>The customer name must be unique.</li><li>The customer name must not contain a colon (:).</li><li>The e-mail address of the customer must contain @ and . (dot).</li><li>The customer address field is mandatory.</li></ul></span>",
+        "methods":[
+            {
+                "MethodName":"Create",
+                "Synopsis":"This operation creates a new entity of the type Customer",
+                "HTTPMethod":"POST",
+                "URI":"/customer/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Update",
+                "Synopsis":"This operation Updates entity of the type Customer",
+                "HTTPMethod":"POST",
+                "URI":"/customer/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Retrieve all",
+                "Synopsis":"This operation retrieve all entities of type Customer",
+                "HTTPMethod":"GET",
+                "URI":"/customer/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Retrieve by ID",
+                "Synopsis":"This operation retrieve an entity of type Customer searched using ID",
+                "HTTPMethod":"GET",
+                "URI":"/customer/v2/:realmId/:accountId",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "accountId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "idDomain",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "enumerated",
+                        "EnumeratedList": [
+                            "NG",
+                            "QB"
+                        ]
+                    }
+                ]
+            },
+            {
+                "MethodName":"Query Filter",
+                "Synopsis":"This operation retrieves entites of type Customer using a Query Filter",
+                "HTTPMethod":"POST",
+                "URI":"/customer/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+
+        ]
+    }
+ ]
+}
