@@ -4,19 +4,13 @@ html
         - if (apiInfo.name)
             - var title = apiInfo.name + ' API Documentation'
         -else
-            - var title = 'Live Documentation'
+            - var title = 'Mastera'
         title=title
         link(rel='stylesheet', href='/stylesheets/prettify.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
         script(type='text/javascript', src='https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js')
 
     body
-        !{body}
-        div(id='io-footer')
-           div(class='f-left') &copy;  
-              a(href='http://mashery.com/io') Mashery, Inc.
-           div(class='f-right') Powered by 
-              a(href='https://github.com/mashery/iodocs') I/O Docs
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js')
         script(src='/javascripts/json2.js')
         script(src='/javascripts/prettify.js')
@@ -24,3 +18,24 @@ html
         script(src='/javascripts/livedocs.js')
         script(src='/javascripts/docs.js')
         script(src='/javascripts/expand.js')
+
+        div(class='wrap')
+            div(class='header')
+                div(class='title')
+                    h1=title
+                div(class='login')
+                    form(action='/logout', method='get', class='inline')
+                        - if (loginInfo)
+                            input(name='logout', value='Logout', type='submit')
+                            span=loginInfo.displayName
+                            h5='Welcome '
+                        - else
+                            ipp:login(href="/openid/intuit")
+
+            !{body}
+            div(id='io-footer')
+               div(class='f-left') &copy;
+                  a(href='http://www.aditi.com') Aditi Technologies
+               div(class='f-right') Powered by
+                  a(href='https://github.com/mashery/iodocs') I/O Docs
+

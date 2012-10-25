@@ -1,16 +1,5 @@
-h1=title
-
-form(action='/logout', method='get')
-    section(class='credentials')
-        - if (loginInfo)
-            h1='Welcome ' + loginInfo.displayName
-            input(name='logout', value='Logout', type='submit')
-        - else
-            ipp:login(href="/openid/intuit")
-br
-
-h2 Choose an API
-
-ul
-   - for (var api in apiInfo)
-       li: a(href = '/' + api) #{apiInfo[api].name}
+nav
+    ul
+        - for (var api in apiInfo)
+            li: a(href = '/' + api)
+                h2 #{apiInfo[api].name}

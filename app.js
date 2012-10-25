@@ -29,13 +29,13 @@ try {
 }
 
 //proxy definition
-var proxy={
+/*var proxy={
     host:'127.0.0.1',
     port:8888,
     localAddress: '127.0.0.1'
 };
-
-//var proxy=null;
+*/
+var proxy=null;
 //
 // Redis connection
 //

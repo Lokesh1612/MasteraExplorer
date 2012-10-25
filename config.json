@@ -1,5 +1,5 @@
 {
-    "title" : "I/O Docs - http://github.com/mashery/iodocs",
+    "title" : "Mastera",
     "address": "localhost",
     "port" : 3000,
     "debug" : false,
