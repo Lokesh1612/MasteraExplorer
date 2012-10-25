@@ -205,6 +205,8 @@ ul
                                 label(for='requestBody') POST
                                 div
                                     -var defaultValue = ''
+                                    -if(method.RequestBody)
+                                        -defaultValue = method.RequestBody
                                     - if(HelperRequestBody != null)
                                         - each value,key in HelperRequestBody
                                             - if(key == endpoint.name+':'+method.MethodName)

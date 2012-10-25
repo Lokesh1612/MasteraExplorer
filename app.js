@@ -133,7 +133,7 @@ function getSavedInfo(req, res, next){
         key + ':apiSecret',
         key + ':params',
         key + ':savedParams',
-        key + ':savedPostData',
+        key + ':savedRequestBody',
         key + ':savedHeaders'
     ], function(err, result) {
         if(!req.session[apiName]){
@@ -195,7 +195,7 @@ function saveRequest(req, res, next) {
     db.set(key + ':savedParams' , JSON.stringify(req.session[req.body.apiName].savedParams), redis.print);
 
     req.session[req.body.apiName].savedRequestBody[req.body.endpointName+':'+req.body.methodName]=req.body.requestBody;
-    db.set(key + ':savedPostData' , JSON.stringify(req.session[req.body.apiName].savedRequestBody), redis.print);
+    db.set(key + ':savedRequestBody' , JSON.stringify(req.session[req.body.apiName].savedRequestBody), redis.print);
 
     req.session[req.body.apiName].savedHeaders[req.body.endpointName+':'+req.body.methodName]=req.body.headers;
     db.set(key + ':savedHeaders' , JSON.stringify(req.session[req.body.apiName].savedHeaders), redis.print);
@@ -831,7 +831,7 @@ app.get('/', function(req, res) {
     });
 });
 
-app.post('/processReq', oauth, saveRequest, processRequest, function(req, res) {
+app.post('/processReq', saveRequest, oauth, processRequest, function(req, res) {
     var result = {
         headers: req.resultHeaders,
         response: req.result,
