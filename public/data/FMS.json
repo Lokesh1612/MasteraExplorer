@@ -1,0 +1,126 @@
+{
+"endpoints":[
+    {
+        "name":"Query",
+        "methods":[
+            {
+                "MethodName":"POST",
+                "Synopsis":"Makes query request as POST",
+                "HTTPMethod":"POST",
+                "URI":"/:realmId/query",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "application/xml"
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "requestid",
+                        "Required": "N",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"GET",
+                "Synopsis":"makes query request as GET",
+                "HTTPMethod":"GET",
+                "URI":"/:realmId/query",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "requestid",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    },
+                    {
+                        "Name": "query",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            }
+
+        ]
+    },
+    {
+     "name":"Customer",
+     "methods":[
+        {
+           "MethodName":"Create",
+           "Synopsis":"This operation creates a new entity of the type Customer",
+           "HTTPMethod":"POST",
+           "URI":"/company/:realmId/customer",
+           "RequiresOAuth":"Y",
+           "RequiresPostData":"Y",
+            "headers":[
+                {
+                    "Name": "content-type",
+                    "Default": "application/xml"
+                }
+            ],
+            "parameters":[
+               {
+                   "Name": "requestid",
+                   "Required": "N",
+                   "Default": "",
+                   "Type": "string"
+               },
+               {
+                   "Name": "realmId",
+                   "Required": "Y",
+                   "Default": "",
+                   "Type": "string"
+               }
+            ]
+        },
+         {
+             "MethodName":"Read",
+             "Synopsis":"This operation retrieves a single entity by ID.",
+             "HTTPMethod":"GET",
+             "URI":"/company/:realmId/customer/:entityid",
+             "RequiresOAuth":"Y",
+             "parameters":[
+                 {
+                     "Name": "requestid",
+                     "Required": "Y",
+                     "Default": "",
+                     "Type": "string"
+                 },
+                 {
+                     "Name": "realmId",
+                     "Required": "Y",
+                     "Default": "",
+                     "Type": "string"
+                 },
+                 {
+                     "Name": "entityid",
+                     "Required": "Y",
+                     "Default": "",
+                     "Type": "string"
+                 }
+             ]
+         }
+
+      ]
+    }
+ ]
+}
