@@ -878,6 +878,101 @@
                 "headers":[
                     {
                         "Name": "content-type",
+                        "Default": "text/xml"
+                    },
+                    {
+                        "Name": "INTUITAUTH",
+                        "Default": "intuit-app-token=\"Application Token assigned to Intuit App Center application\",intuit-token=\"Intuit login Ticket\""
+                    },  
+                    {
+                        "Name": "Cookie",
+                        "Default": "TICKET=<Intuit login Ticket>; qbn.ticket=<QBN Ticket>; qbn.tkt=<QBN tkt>; qbn.authid=<QBN Auth ID>; qbn.gauthid=<QBN G Auth ID>; qbn.agentid=<QBN Agent ID>; iamValidationTime=<time stamp>"
+                    }
+                ],
+                "parameters":[
+                ]
+            },
+            {
+                "MethodName":"Update",
+                "Synopsis":"This operation Updates entity of the type Company",
+                "HTTPMethod":"POST",
+                "URI":"/company/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "text/xml"
+                    },
+                    {
+                        "Name": "INTUITAUTH",
+                        "Default": "intuit-app-token=\"Application Token assigned to Intuit App Center application\",intuit-token=\"Intuit login Ticket\""
+                    }
+                ],
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Retrieve a company",
+                "Synopsis":"This operation retrieve a company",
+                "HTTPMethod":"GET",
+                "URI":"/company/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "parameters":[
+                    {
+                        "Name": "realmId",
+                        "Required": "Y",
+                        "Default": "",
+                        "Type": "string"
+                    }
+                ]
+            },
+            {
+                "MethodName":"Retrieve a List of Companies",
+                "Synopsis":"<p>Company information may belong to the Intuit domain without belonging to the Data Services domain, because a company may have been created for an application without a Data Services association. The company/v2/availablelist API retrieves both the Data Services and non-Data Services companies that are associated with the user identity.&nbsp; To determine if a company is non-Data Services, check the following elements in the response:</p><ul> <li>DefinitionId: DoNotUse</li> <li>Name: RealmStatus</li> <li>Value: NonIDS</li></ul>",
+                "HTTPMethod":"GET",
+                "URI":"/company/v2/availablelist",
+                "RequiresOAuth":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
+                        "Default": "text/xml"
+                    },
+                    {
+                        "Name": "INTUITAUTH",
+                        "Default": "intuit-app-token=\"Application Token assigned to Intuit App Center application\",intuit-token=\"Intuit login Ticket\""
+                    },  
+                    {
+                        "Name": "Cookie",
+                        "Default": "TICKET=<Intuit login Ticket>; qbn.ticket=<QBN Ticket>; qbn.tkt=<QBN tkt>; qbn.authid=<QBN Auth ID>; qbn.gauthid=<QBN G Auth ID>; qbn.agentid=<QBN Agent ID>; iamValidationTime=<time stamp>"
+                    }
+                ],
+                "parameters":[
+                    
+                ]
+            }            
+        ]
+    },
+    {
+        "name":"CreditCardCharge",
+        "Synopsis":"<span><p>Financial transaction representing a charge for purchase of goods or services. The CreditCardCharge represents an expense to the business as a credit card charge transaction. The expense is of the following types: </p><ul><li> Item based expense for the item that is purchased for reselling. </li><li> Account based expense for the amount spend on an account, such as expense incurred on \"advertisement expense\" account.</li></ul></span>",
+        "methods":[
+            {
+                "MethodName":"Create",
+                "Synopsis":"This operation creates a new entity of the type CreditCardCharge",
+                "HTTPMethod":"POST",
+                "URI":"/creditcardcharge/v2/:realmId",
+                "RequiresOAuth":"Y",
+                "RequiresPostData":"Y",
+                "headers":[
+                    {
+                        "Name": "content-type",
                         "Default": "application/xml"
                     }
                 ],
@@ -892,19 +987,15 @@
             },
             {
                 "MethodName":"Update",
-                "Synopsis":"This operation Updates entity of the type Account",
+                "Synopsis":"This operation Updates entity of the type CreditCardCharge",
                 "HTTPMethod":"POST",
-                "URI":"/account/v2/:realmId",
+                "URI":"/creditcardcharge/v2/:realmId",
                 "RequiresOAuth":"Y",
                 "RequiresPostData":"Y",
                 "headers":[
                     {
                         "Name": "content-type",
-                        "Default": "text/xml"
-                    },
-                    {
-                        "Name": "Cookie",
-                        "Default": "TICKET=<Intuit login Ticket>; qbn.ticket=<QBN Ticket>; qbn.tkt=<QBN tkt>; qbn.authid=<QBN Auth ID>; qbn.gauthid=<QBN G Auth ID>; qbn.agentid=<QBN Agent ID>; iamValidationTime=<time stamp>"
+                        "Default": "application/xml"
                     }
                 ],
                 "parameters":[
@@ -918,9 +1009,9 @@
             },
             {
                 "MethodName":"Retrieve all",
-                "Synopsis":"This operation retrieve all entities of type Account",
+                "Synopsis":"This operation retrieve all entities of type CreditCardCharge",
                 "HTTPMethod":"GET",
-                "URI":"/account/v2/:realmId",
+                "URI":"/creditcardcharge/v2/:realmId",
                 "RequiresOAuth":"Y",
                 "parameters":[
                     {
@@ -933,19 +1024,13 @@
             },
             {
                 "MethodName":"Retrieve by ID",
-                "Synopsis":"This operation retrieve an entity of type Account searched using ID",
+                "Synopsis":"This operation retrieve an entity of type CreditCardCharge searched using ID",
                 "HTTPMethod":"GET",
-                "URI":"/account/v2/:realmId/:accountId",
+                "URI":"/creditcardcharge/v2/:CreditCardChargeID",
                 "RequiresOAuth":"Y",
                 "parameters":[
                     {
-                        "Name": "realmId",
-                        "Required": "Y",
-                        "Default": "",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "accountId",
+                        "Name": "CreditCardChargeID",
                         "Required": "Y",
                         "Default": "",
                         "Type": "string"
@@ -964,9 +1049,9 @@
             },
             {
                 "MethodName":"Query Filter",
-                "Synopsis":"This operation retrieves entites of type Account using a Query Filter",
+                "Synopsis":"This operation retrieves entites of type CreditCardCharge using a Query Filter",
                 "HTTPMethod":"POST",
-                "URI":"/account/v2/:realmId",
+                "URI":"/creditcardcharge/v2/:realmId",
                 "RequiresOAuth":"Y",
                 "RequiresPostData":"Y",
                 "headers":[
@@ -986,7 +1071,6 @@
             }
         ]
     },
-
 
 
 
