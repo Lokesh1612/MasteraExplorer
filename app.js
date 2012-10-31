@@ -870,7 +870,7 @@ app.get('/openid/intuit/return',
 app.get('/logout', function(req, res){
     req.session.loggedin = false
     req.logout();
-    res.redirect('/');
+    res.redirect('back');
 });
 
 // API shortname, all lowercase

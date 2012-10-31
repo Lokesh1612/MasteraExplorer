@@ -39,8 +39,8 @@
         },
         "keyParam":""
     },
-    "IDS": {
-        "name": "IDS",
+    "IDS_QBD": {
+        "name": "IDS QBD",
         "protocol": "https",
         "baseURL": "services.intuit.com",
         "publicPath": "",
