@@ -154,6 +154,7 @@ function getSavedInfo(req, res, next){
             req.session[apiName].defaultSecret=result[3];
         }
         else {
+            req.session[apiName].authed = false;
     //        req.session[apiName] = {};
         }
 
@@ -864,7 +865,7 @@ app.get('/openid/intuit/return',
     function(req, res) {
         if(req.session.passport.user)
             req.session.loggedin = true;
-        res.redirect('back');
+        res.send({});
     });
 
 app.get('/logout', function(req, res){

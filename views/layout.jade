@@ -14,29 +14,7 @@ html
         meta(http-equiv="EXPIRES", content="0")
 
     body
-        input(type="hidden", id="refreshed", value="no")
-        script(type="text/javascript")
-            onload=function(){
-                var e=document.getElementById("refreshed");
-                if(e.value=="no")e.value="yes";
-                else{
-                    e.value="no";
-                    location.reload();
-                }
-            }
         div(class='wrap')
-            div(class='pageheader')
-                div(class='login')
-                    form(action='/logout', method='get')
-                        - if (loginInfo)
-                            input(name='logout', value='Logout', type='submit')
-                            span=loginInfo.displayName
-                            h5='Welcome '
-                        - else
-                            ipp:login(href="/openid/intuit")
-                div(class='title')
-                    h1=title
-
             !{body}
             div(id='io-footer')
                div(class='f-left') &copy;

@@ -1,3 +1,14 @@
+div(class='pageheader')
+    div(class='login')
+        form(action='/logout', method='get')
+            - if (loginInfo)
+                input(name='logout', value='Logout', type='submit')
+                span=loginInfo.displayName
+                h5='Welcome '
+            - else
+                ipp:login(href="/openid/intuit")
+    div(class='title')
+        h1=title
 nav
     ul
         - for (var api in apiInfo)

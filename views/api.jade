@@ -3,6 +3,15 @@
 - else
     - var authed =''
 
+- if (apiInfo.name)
+    - var title = apiInfo.name + ' API Documentation'
+-else
+    - var title = 'Mastera'
+
+div(class='pageheader')
+    div(class='title')
+        h1=title
+
 form#credentials
     input(type='hidden', name='apiName', value=apiName)
     - if (apiInfo.auth)
