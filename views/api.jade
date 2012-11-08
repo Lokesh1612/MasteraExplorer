@@ -62,7 +62,7 @@ form#credentials
                     span Authenticated with OAuth
                     img(src='/images/accept.png')
                 input(type='hidden', name='action', value='remove', id='submitClicked')
-                input(name='remove', value='Invalidate', type='submit', onclick="javascript:document.getElementById('submitClicked').value='remove'")
+                input(id='oauth-auth',name='remove', value='Invalidate', type='submit', onclick="javascript:document.getElementById('submitClicked').value='remove'")
 
 
 div(id='controls')
@@ -215,7 +215,7 @@ ul
                                         - each value,key in HelperRequestBody
                                             - if(key == endpoint.name+':'+method.MethodName)
                                                 -defaultValue = value
-                                    textarea(id='requestBody', name='requestBody', cols='200', class="expand")
+                                    textarea(id='requestBody', name='requestBody', class="expand")
                                         #{defaultValue}
 
                             // Create header fields and button to add/remove headers.

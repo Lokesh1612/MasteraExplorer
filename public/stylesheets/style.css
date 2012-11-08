@@ -138,6 +138,10 @@ a, a:active, a:visited {
     text-decoration: none;
 }
 
+.credentials * {
+    font-size: 12px;
+    font-weight: normal;
+}
 .credentials {
     background-color: rgba(66, 130, 172, 0.5);
     border: 1px solid #658FB6;
@@ -165,6 +169,7 @@ a, a:active, a:visited {
 .credentials div {
     float: left;
     margin-right: 15px;
+    width: 100%
 }
 
 .credentials form {
@@ -178,11 +183,12 @@ a, a:active, a:visited {
 }
 
 .credentials input {
-    width: 200px;
+    width: 100%;
 }
 
 .credentials #oauth-auth {
     margin-top: 20px;
+    width: 100px;
 }
 
 .credentials #login {
@@ -415,7 +421,7 @@ a, a:active, a:visited {
     width: 100%;
 }
 
-.method tr.required {
+.method tr.required td{
     font-weight: bold;
 }
 
@@ -433,7 +439,7 @@ a, a:active, a:visited {
     font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Bitstream Vera Mono', monospace;
 }
 
-.method td.description, .method input, .method textarea{
+.method td, .method input, .method textarea{
     font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-size: 12px;
     font-weight: normal;

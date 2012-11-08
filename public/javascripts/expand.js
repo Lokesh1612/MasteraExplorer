@@ -53,6 +53,7 @@
 
                 e.style.overflow = (e.scrollHeight > h ? "auto" : "hidden");
                 e.style.height = h + "px";
+                e.style.width = "100%";
 
                 e.valLength = vlen;
                 e.boxWidth = ewidth;

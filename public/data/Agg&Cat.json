@@ -136,7 +136,7 @@
                 "MethodName":"Default",
                 "Synopsis":"This API returns all information about the account. If the last refresh date of the account is older than the “refresh-cache-seconds-to-live”, a non-interactive refresh of that account is attempted before it is returned. If that refresh fails the account will still be returned, but the aggrSuccessDate field of the account data will not be updated and a numeric error code indicating the reason for the failure will be found in the aggrStatusCode field.",
                 "HTTPMethod":"GET",
-                "URI":"/v1/accounts/:account_id",
+                "URI":"/accounts/:account_id",
                 "RequiresOAuth":"Y",
                 "parameters":[
                     {
@@ -169,13 +169,15 @@
                         "Name": "txnStartDate",
                         "Required": "N",
                         "Default": "",
-                        "Type": "string"
+                        "Type": "string",
+                        "Description": "Date should be of format 'DD-MM-YYYY'"
                     },
                     {
                         "Name": "txnEndDate",
                         "Required": "N",
                         "Default": "",
-                        "Type": "string"
+                        "Type": "string",
+                        "Description": "Date should be of format 'DD-MM-YYYY'"
                     }
                 ]
             }
